@@ -1239,6 +1239,14 @@ class FormHelper extends AppHelper {
 				$this->_parseAttributes($options, array('name'), null, ' ')
 			);
 		}
+		elseif(isset($options['appendBtn']))
+		{
+			return sprintf(
+				$this->Html->div('controls',$this->Html->div('input-append',$this->Html->tags['input'].$this->Html->tag('a',$options['appendBtn'],array('class'=>'btn', 'id'=>$fieldName.'Btn')))),
+				$options['name'],
+				$this->_parseAttributes($options, array('name'), null, ' ')
+			);
+		}
 		elseif(isset($options['help-block']))
 		{
 				return sprintf(
@@ -1397,8 +1405,10 @@ class FormHelper extends AppHelper {
  * @access public
  * @link http://book.cakephp.org/view/1415/button
  */
-	function button($title, $options = array()) {
-		$options += array('type' => 'submit', 'escape' => false, 'class'=>'btn btn-primary');
+ 	function button($title, $options = array()) {
+		isset($options['class']) ? $options['class'] = 'btn '.$options['class'] :  $options['class'] = 'btn ';
+		
+		$options += array('type' => 'submit', 'escape' => false);
 		if ($options['escape']) {
 			$title = h($title);
 		}
@@ -1409,13 +1419,14 @@ class FormHelper extends AppHelper {
 				$options['name'],
 				$this->_parseAttributes($options, array('name'), null, ' ')
 			);
+		} else {
+			return sprintf(
+				$this->Html->tags['button'],
+				$options['type'],
+				$this->_parseAttributes($options, array('name'), null, ' '),
+				$title
+			);
 		}
-		return sprintf(
-			$this->Html->div('',$this->Html->tags['button'], array('class'=>'form-actions')),
-			$options['type'],
-			$this->_parseAttributes($options, array('type'), array('class'=>'btn btn-primary'), ''),
-			$title
-		);
 	}
 
 /**
